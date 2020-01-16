@@ -65,25 +65,24 @@ try {
   echo "Database connection failed.<br>".$e->getMessage();
 }
 
-$preped = $conn->prepare("SELECT `id` FROM ".DB_NAME.".`accounts` 
-                           WHERE `accounts`.`nick` = :nick 
-                             AND `accounts`.`pass` = :pass;");
+$preped = $conn->prepare("SELECT `pass` FROM ".DB_NAME.".`accounts` 
+                           WHERE `accounts`.`nick` = :nick;");
 
 $preped->bindParam(":nick", $nick);
-$preped->bindParam(":pass", $pass);
-
 $nick = get_post_value("nick");
-$pass = hash("sha256", get_post_value("pass"));
+$pass = get_post_value("pass");
 
 // Execute prepared statment. 
 if ($preped->execute()) {
-  $id = null;
+  $hash = null;
   
   while ($row = $preped->fetch()) {
-    $id = $row;
+    $hash = $row;
   }
   
-  if (!isset($id)) { die(FAILURE); }
+  if (!isset($hash) || !password_verify($pass, $hash[0])) { 
+    die(FAILURE); 
+  }
   
   if (!isset($_SESSION["nick"])) {
     $_SESSION["nick"] = hash("sha256", $nick);

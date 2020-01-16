@@ -12,16 +12,16 @@ if (!isset($title)) {
   <meta charset="utf-8">
   <link rel="stylesheet" 
         type="text/css" 
-        href="<?php echo ROOT_URL; ?>bootstrap/css/bootstrap.min.css">
+        href="<?= ROOT_URL ?>bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" 
         type="text/css" 
-        href="<?php echo ROOT_URL; ?>css/styles.css">
+        href="<?= ROOT_URL ?>css/styles.css">
   <script type="text/javascript" 
-          src="<?php echo ROOT_URL; ?>jquery/jquery.min.js"></script>
+          src="<?= ROOT_URL ?>jquery/jquery.min.js"></script>
   <script type="text/javascript" 
-          src="<?php echo ROOT_URL; ?>jquery-ui/jquery-ui.min.js"></script>
+          src="<?= ROOT_URL ?>jquery-ui/jquery-ui.min.js"></script>
   <script type="text/javascript" 
-          src="<?php echo ROOT_URL; ?>bootstrap/js/bootstrap.min.js"></script>
+          src="<?= ROOT_URL ?>bootstrap/js/bootstrap.min.js"></script>
   <title><?php echo $title; ?></title>
   <?php
     if (isset($login_php)) {
@@ -33,7 +33,7 @@ if (!isset($title)) {
   <header class="">
       <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark" 
            id="main-menu">
-      <a class="navbar-brand"><?php echo WEBSITE_NAME; ?></a>
+      <a class="navbar-brand"><?= WEBSITE_NAME ?></a>
       <button class="navbar-toggler" 
               type="button" 
               data-toggle="collapse" 
@@ -49,17 +49,20 @@ if (!isset($title)) {
           <li class="nav-item" 
               id="home">
             <a class="nav-link"
-               href="<?php echo INDEX_PHP; ?>">Accueil</a>
+               href="<?= INDEX_PHP ?>">Accueil</a>
           </li>
-          <li class="nav-item" 
-              id="login">
-<?php if (!isset($_SESSION["nick"])) { ?>
-          <a class="nav-link" href="<?php echo LOGIN_PHP; ?>">Connection</a>
-<?php } else { ?>
-          <a class="nav-link" href="<?php echo LOGOUT_PHP; ?>">Déconnection</a>
-<?php } ?>
+          <li class="nav-item">
+            <a class="nav-link"
+               href="#">Lorem ipsum</a>
           </li>
         </ul>
+        <div class="navbar-right"
+             id="login">  
+<?php if (!isset($_SESSION["nick"])) { ?>
+          <a class="btn btn-success" href="<?= LOGIN_PHP ?>">Connection</a>
+<?php } else { ?>
+          <a class="btn btn-danger" href="<?= LOGOUT_PHP ?>">Déconnection</a>
+<?php } ?>
       </div>
     </nav>
   </header>

@@ -1,5 +1,12 @@
 <?php
+session_start();
+
 require_once "./internals/constants.php";
+
+if (isset($_SESSION["nick"])) {
+  header("Location: ".INDEX_PHP);
+}
+
 ob_start(); 
 ?>
 
@@ -9,7 +16,7 @@ ob_start();
     const pass = $('#pass').val();
 
     $.ajax({
-        url: '<?php echo CONNECT_PHP; ?>'
+        url: '<?= CONNECT_PHP ?>'
     ,  type: 'POST'
     ,  data: {nick: nick, pass: pass}
     });
@@ -22,13 +29,13 @@ ob_start();
       const response = xhr.responseText;
       if (response == '1') {
         $('#login-div').fadeOut(300, () => {
-          $('#success').fadeIn("fast");
+          $('#success').fadeIn('fast').delay(900).fadeOut('fast', () => { 
+            window.location = '<?= INDEX_PHP ?>'; 
+          });
         });
-        $('#login').html(`<a class="nav-link" 
-                             href="<?php echo LOGOUT_PHP; ?>">Déconnection
-                          </a>`);
+        
       } else {
-        $('#login-div').effect("shake");
+        $('#login-div').effect('shake');
       }
     });
   });
@@ -46,7 +53,7 @@ $title = "Connection";
       id="login-form"
       method="POST"
 <?php if (!isset($login_php)) { ?>
-        action="<?php echo CONNECT_PHP; ?>"
+        action="<?= CONNECT_PHP ?>"
 <?php } else { ?>
         action="javascript: submitForm();"
 <?php } ?>
@@ -65,23 +72,23 @@ $title = "Connection";
   </div>
   <div id="login-div">
     <label for="nick" 
-            class="sr-only">Nom d'utilisateur</label>
+          class="sr-only">Nom d'utilisateur</label>
     <input type="text" 
-            id="nick" 
-            name="nick"
-            class="form-control" 
-            placeholder="Nom d'utilisateur" 
-            required 
-            autofocus>
+           id="nick" 
+           name="nick"
+           class="form-control" 
+           placeholder="Nom d'utilisateur" 
+           required 
+           autofocus>
     <label for="pass" 
-            class="sr-only">Password</label>
+           class="sr-only">Password</label>
     <input type="password" 
-            id="pass"
-            name="pass"
-            class="form-control" 
-            placeholder="Mot de passe" 
-            required>
-    <button class="btn btn-lg btn-primary btn-block" 
+           id="pass"
+           name="pass"
+           class="form-control" 
+           placeholder="Mot de passe" 
+           required>
+    <button class="btn btn-lg btn-success btn-block" 
             type="submit">Connection</button>
   </div>
 </form>
