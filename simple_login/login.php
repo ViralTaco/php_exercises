@@ -1,22 +1,40 @@
-<?php
-session_start();
+<?php require_once "./internals/init.php";
 
-require_once "./internals/constants.php";
-
-if (isset($_SESSION["nick"])) {
+if (array_key_exists("nick", $_SESSION)) {
   header("Location: ".INDEX_PHP);
 }
 
-ob_start(); 
-?>
+if (!isset($is_signup) || !$is_signup) {
+  $is_signup = false;
+  $action_php = CONNECT_PHP;
+  $action_str = $content["login"];
+  $btn_class = "btn-success";
+} else {
+  $action_php = REGISTER_PHP;
+  $action_str = $content["signup"];
+  $btn_class = "btn-info";
+}
 
+// start buffer
+ob_start(); ?>
+<!-- login js -->
 <script type="text/javascript">
+  function failShake() {
+    $('#login-div').effect('shake');
+  }
+  
   function submitForm() {
     const nick = $('#nick').val();
     const pass = $('#pass').val();
 
+<?php if ($is_signup) { ?>    
+    if (pass !== $('#pass-conf').val()) {
+      failShake();
+      return false;
+    }
+<?php } ?>
     $.ajax({
-        url: '<?= CONNECT_PHP ?>'
+        url: '<?= $action_php ?>'
     ,  type: 'POST'
     ,  data: {nick: nick, pass: pass}
     });
@@ -26,8 +44,12 @@ ob_start();
   
   $(() => {
     $(document).ajaxSuccess((event, xhr, settings) => {
+      if (settings.url !== '<?= $action_php ?>') {
+        return;
+      }
+      
       const response = xhr.responseText;
-      if (response == '1') {
+      if (response === '1') {
         $('#login-div').fadeOut(300, () => {
           $('#success').fadeIn('fast').delay(900).fadeOut('fast', () => { 
             window.location = '<?= INDEX_PHP ?>'; 
@@ -35,29 +57,29 @@ ob_start();
         });
         
       } else {
-        $('#login-div').effect('shake');
+        failShake();
       }
     });
   });
 </script>
 
 <?php
+// get buffer
 $login_php = ob_get_clean();
-$title = "Connection";
-?>
+$title = $action_str;
 
-<!-- Header -->
-<?php include HEADER; ?>
+include HEADER; ?>
 
 <form class="form-signin text-center choice" 
       id="login-form"
       method="POST"
 <?php if (!isset($login_php)) { ?>
-        action="<?= CONNECT_PHP ?>"
+        action="<?= $action_php ?>"
 <?php } else { ?>
         action="javascript: submitForm();"
 <?php } ?>
       >
+<!-- success animation -->      
   <div id="success"
        class="hidden">
     <div class="swal2-icon swal2-success swal2-animate-success-icon" 
@@ -70,26 +92,38 @@ $title = "Connection";
       <div class="swal2-success-circular-line-right"></div>
     </div>
   </div>
+<!-- login form -->  
   <div id="login-div">
     <label for="nick" 
-          class="sr-only">Nom d'utilisateur</label>
+          class="sr-only"><?= $content["username"] ?></label>
     <input type="text" 
            id="nick" 
            name="nick"
            class="form-control" 
-           placeholder="Nom d'utilisateur" 
+           placeholder="<?= $content['username'] ?>"
            required 
            autofocus>
     <label for="pass" 
-           class="sr-only">Password</label>
+           class="sr-only"><?= $content["password"] ?></label>
     <input type="password" 
            id="pass"
            name="pass"
            class="form-control" 
-           placeholder="Mot de passe" 
+           placeholder="<?= $content['password'] ?>"
            required>
-    <button class="btn btn-lg btn-success btn-block" 
-            type="submit">Connection</button>
+<?php if ($is_signup) { ?>
+<!-- confirm password -->
+    <label for="pass-conf" 
+           class="sr-only"><?= $content["confirm_pass"] ?></label>
+    <input type="password" 
+           id="pass-conf"
+           name="pass-conf"
+           class="form-control" 
+           placeholder="<?= $content['confirm_pass'] ?>"
+           required>
+<?php } ?>          
+    <button class="btn btn-lg btn-block <?= $btn_class ?>" 
+            type="submit"><?= $action_str ?></button>
   </div>
 </form>
 <!-- Footer -->

@@ -1,39 +1,67 @@
-<?php
-session_start();
-require_once realpath(__DIR__."/../internals/constants.php");
+<?php require_once realpath(__DIR__."/../internals/init.php");
 
 // Make sure title is set otherwise redirect to 404 page to avoid PHP error.
 if (!isset($title)) { 
   header("Location: ".ER404_PHP); 
-} 
-?>
-<!doctype html> <html lang="fr">
+} ?>
+<!doctype html> <html lang="<?= $lang ?>">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" 
+        content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title><?= $title; ?></title>
+<!-- bootstrap css -->
   <link rel="stylesheet" 
         type="text/css" 
-        href="<?= ROOT_URL ?>bootstrap/css/bootstrap.min.css">
+        href="<?= ROOT_URL ?>css/bootstrap.min.css">
+<!-- custom css -->
   <link rel="stylesheet" 
         type="text/css" 
         href="<?= ROOT_URL ?>css/styles.css">
+<!-- jQuery js -->
   <script type="text/javascript" 
-          src="<?= ROOT_URL ?>jquery/jquery.min.js"></script>
+          src="<?= ROOT_URL ?>js/jquery.min.js"></script>
+<!-- jQuery-ui js -->
   <script type="text/javascript" 
-          src="<?= ROOT_URL ?>jquery-ui/jquery-ui.min.js"></script>
+          src="<?= ROOT_URL ?>js/jquery-ui.min.js"></script>
+<!-- bootstrap js -->
   <script type="text/javascript" 
-          src="<?= ROOT_URL ?>bootstrap/js/bootstrap.min.js"></script>
-  <title><?php echo $title; ?></title>
-  <?php
-    if (isset($login_php)) {
-      echo $login_php;
+          src="<?= ROOT_URL ?>js/bootstrap.min.js"></script>
+<!-- language js -->
+  <script type="text/javascript">
+    function setLang(lang) {
+      $.ajax({
+         url: '<?= LANG_PHP ?>'
+      ,  type: 'POST'
+      ,  data: {lang: lang}
+      ,  success: window.location.reload()
+      });
+      
+      return true;
     }
-  ?>
+    
+    $(() => {
+<?php foreach($locale as $key => $_) { ?>
+      $('#<?= $key ?>').click((event) => {
+        setLang('<?= $key ?>');
+      });
+<?php } ?>
+    });
+  </script>
+
+<?php 
+if (isset($login_php)) {
+  echo $login_php;
+} 
+$has_session = array_key_exists("nick", $_SESSION);
+?>
+
 </head>
 <body>
-  <header class="">
+  <header>
       <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark" 
            id="main-menu">
-      <a class="navbar-brand"><?= WEBSITE_NAME ?></a>
+      <a class="navbar-brand"><?= $content["website_name"] ?></a>
       <button class="navbar-toggler" 
               type="button" 
               data-toggle="collapse" 
@@ -48,22 +76,60 @@ if (!isset($title)) {
         <ul class="navbar-nav mr-auto">
           <li class="nav-item" 
               id="home">
+<!-- home -->              
             <a class="nav-link"
-               href="<?= INDEX_PHP ?>">Accueil</a>
+               href="<?= INDEX_PHP ?>"><?= $content["home"] ?></a>
           </li>
           <li class="nav-item">
+<!-- menu -->          
             <a class="nav-link"
-               href="#">Lorem ipsum</a>
+               href="#"><?= $content["menu"] ?></a>
           </li>
         </ul>
         <div class="navbar-right"
-             id="login">  
-<?php if (!isset($_SESSION["nick"])) { ?>
-          <a class="btn btn-success" href="<?= LOGIN_PHP ?>">Connection</a>
-<?php } else { ?>
-          <a class="btn btn-danger" href="<?= LOGOUT_PHP ?>">Déconnection</a>
+             id="login">    
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item dropdown mr-2">
+<!-- language selection -->            
+              <a class="nav-link dropdown-toggle" 
+                 href="#" 
+                 id="lang-select" 
+                 role="button" 
+                 data-toggle="dropdown" 
+                 aria-haspopup="true" 
+                 aria-expanded="false">
+                <?= $content["language"] ?>
+              </a>
+              <div class="dropdown-menu" 
+                   aria-labelledby="lang-select">
+<?php foreach ($locale as $key => $arr) { ?>
+                <a class="dropdown-item" 
+                   href="#"
+                   id="<?= $key ?>"><?= $arr["language"] ?></a>
 <?php } ?>
+              </div>
+            </li>
+<!-- sign up -->
+<?php if (!$has_session) { ?>
+            <li class="nav-item mr-2">
+              <a class="btn btn-outline-info" 
+                  href="<?= SIGNUP_PHP ?>"><?= $content["signup"] ?></a>
+            </li>
+<?php } ?>            
+            <li class="nav-item mr-2">
+<!-- log in/out -->            
+<?php if (!$has_session) { ?>
+              <a class="btn btn-outline-success" 
+                 href="<?= LOGIN_PHP ?>"><?= $content["login"] ?></a>
+<?php } else { ?>
+              <a class="btn btn-outline-danger" 
+                 href="<?= LOGOUT_PHP ?>"><?= $content["logout"] ?></a>
+<?php } ?>
+            </li>            
+          </ul>
+        </div>
       </div>
     </nav>
   </header>
-  <main id="main">
+  <main id="main"
+        role="main">

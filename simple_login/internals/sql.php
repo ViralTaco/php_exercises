@@ -1,6 +1,7 @@
-<?php
+<?php 
+require_once realpath(__DIR__."/init.php");
 /**
- * This file contains the model for the MySQL database
+ * This file contains the model and controller for the MySQL database
  * It is based on the following online tutorial:
  * cf: https://alexwebdevelop.com/user-authentication/
  * 
@@ -35,62 +36,67 @@
       `pass` VARCHAR(255) NOT NULL,
     ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
-
-  sessions table: 
-    CREATE TABLE `sessions` (
-      `id` VARCHAR(255) NOT NULL PRIMARY KEY,
-      `account_id` INTEGER UNSIGNED NOT NULL
-    ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 */
 
 // db variables:
-$host = "127.0.0.1";
-$port = "8889";
-$user = "notroot";
-$passwd = "FHfGnqhANotqglqr";
+$conn = null;
+$dsn = "mysql:host=".DB_HOST.";port=".DB_PORT.";dbname=".DB_NAME;
 
-$schema = "loginform";
-$conn = NULL;
-$dsn = "mysql:host=".$host.";port=".$port.";dbname=".$schema;
-
-//// Connect to db:
-//try {  
-//  $conn = new PDO($dsn, $user, $passwd);
-//  $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-//} catch (PDOException $e) {
-//  die("Database connection failed.\n".$e->getMessage());
-//}
-
-// Connect to server and select databse.
-mysql_connect("$host:$port", "$user", "$passwd") || die("cannot connect"); 
-mysql_select_db("$schema") || die("cannot select DB");
-
-// Define $myusername and $mypassword 
-$myusername = $_POST['nick'];
-$mypassword = $_POST['pass'];
-
-// To protect MySQL injection (more detail about MySQL injection)
-$myusername = stripslashes($nick);
-$mypassword = stripslashes($pass);
-$myusername = mysql_real_escape_string($myusername);
-$mypassword = mysql_real_escape_string($mypassword);
-$mypassword = password_hash($mypassword, PASSWORD_ARGON2I);
-
-
-$sql = "SELECT * FROM $schema WHERE username='$myusername' and password='$mypassword'";
-$result = mysql_query($sql);
-
-// Mysql_num_row is counting table row
-$count = mysql_num_rows($result);
-// If result matched $myusername and $mypassword, table row must be 1 row
-
-if ($count == 1) {
-  session_register("myusername");
-  session_register("mypassword"); 
-  header("Location: ".SUCCESS_PHP);
-} else {
-  echo "Wrong Username or Password";
+// Connect to db:
+try {  
+  $conn = new PDO($dsn, DB_USER, DB_PASS);
+  $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+  die("Database connection failed.<br>".$e->getMessage());
 }
 
-ob_end_flush();
-?>
+function does_nick_exist(string $nick, PDO $connection) : bool {
+  $select = $connection->prepare(
+    "SELECT `nick` FROM ".DB_NAME.".`accounts` WHERE `accounts`.`nick` = ?;");
+  if ($select->execute([$nick])) {
+    while ($row = $select->fetch()) {
+      if ($row === $nick) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+function create_user(string $nick, string $hash, PDO $connection) : bool {
+  $insert = $connection->prepare(
+    "INSERT INTO ".DB_NAME.".`accounts` (`nick`, `pass`) VALUES (:nick, :hash);"
+  );
+  
+  $insert->bindValue(":nick", $nick);
+  $insert->bindValue(":hash", $hash);
+  
+  $insert->execute();
+  
+  // check if it worked:
+  return true;
+}
+
+function user_login(string $nick, string $pass, PDO $connection) : string {
+  $preped = $connection->prepare("SELECT `pass` FROM ".DB_NAME.".`accounts` 
+                                  WHERE `accounts`.`nick` = :nick;");
+
+  $preped->bindValue(":nick", $nick);
+  // Execute prepared statment. 
+  if ($preped->execute()) {
+    $hash = null;
+    
+    while ($row = $preped->fetch()) {
+      $hash = $row;
+    }
+    
+    if (isset($hash) && password_verify($pass, $hash[0])) { 
+      if (!array_key_exists("nick", $_SESSION)) {
+        $_SESSION["nick"] = hash("sha256", $nick);
+      }
+      return SUCCESS;
+    }
+    
+    return FAILURE;
+  } 
+}

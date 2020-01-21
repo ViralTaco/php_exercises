@@ -1,11 +1,7 @@
-<?php 
-require_once realpath(__DIR__."/internals/init.php");
-
+<?php require_once "constants.php";
 /**
- * This file contains the user model and controller for user connection
- * It is based on the following online tutorial:
- * cf: https://alexwebdevelop.com/user-authentication/
- * 
+ * This file contains the strings for localization
+ *
  * @author: Capobianco Anthony 
  * 
  * @license: SPDX License Identifier: MIT
@@ -27,21 +23,42 @@ require_once realpath(__DIR__."/internals/init.php");
  * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION 
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
-/*
-  accounts table:
-
-    CREATE TABLE `accounts` (
-      `id` INTEGER UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-      `nick` VARCHAR(255) NOT NULL,
-      `pass` VARCHAR(255) NOT NULL,
-    ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
-
-*/
-
-ob_start();
-
-echo user_login(get_post_value("nick"), get_post_value("pass"), $conn);
-exit();
-
-ob_end_flush();
+ */  
+$locale = [
+  "fr" => [
+    "language" => "Français",
+    "404_title" => "404 - Page Not Found",
+    "404_message" => "Cette page n'existe pas.",
+    "website_name" => "Login Form",
+    "home" => "Acceuil",
+    "menu" => "Menu",
+    "admin" => "Admin",
+    "login" => "Connection",
+    "logout" => "Déconnection",
+    "signup" => "Inscription",
+    "username" => "Nom d'utilisateur",
+    "password" => "Mot de passe",
+    "coming_soon" => "Bientôt disponible",
+    "brand" => "Notre entreprise",
+    "what_we_do" => "crée des solutions",
+    "confirm_pass" => "Confirmez le mot de passe",
+  ],
+  "en" => [
+    "language" => "English",
+    "404_title" => "404 - Page Not Found",
+    "404_message" => "This page doesn't exist.",
+    "website_name" => "Login Form",
+    "home" => "Home",
+    "menu" => "Menu",
+    "admin" => "Admin",
+    "login" => "Log in",
+    "logout" => "Log out",
+    "signup" => "Sign up",
+    "username" => "Username",
+    "password" => "Password",
+    "coming_soon" => "Coming Soon",
+    "brand" => "Our company",
+    "what_we_do" => "creates solutions",
+    "confirm_pass" => "Confirm password",
+  ]
+];

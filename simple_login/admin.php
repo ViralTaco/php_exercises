@@ -1,9 +1,6 @@
-<?php
-session_start();
-require_once realpath(__DIR__."/internals/constants.php");
+<?php 
+require_once realpath(__DIR__."/internals/init.php");
 
-
-if (!isset($_SESSION["nick"])) {
+if (!array_key_exists("nick", $_SESSION)) {
   header("Location: ".LOGIN_PHP);
-}
-?>
+} ?>
