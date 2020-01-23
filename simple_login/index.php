@@ -1,11 +1,13 @@
 <?php 
-require_once "./internals/init.php";
+require_once realpath(__DIR__."/controllers/init.php");
 
 $title = $content["home"];
-include HEADER; ?>
+define("IMG_URL", ROOT_URL."/views/includes/img");
+include HEADER; 
+?>
 
 <div class="hero text-white text-left"
-     style="background-image: url(<?= ROOT_URL.'/img/computer.jpg' ?>);">
+     style="background-image: url(<?= IMG_URL.'/computer.jpg' ?>);">
   <h1 class="display-5"><?= $content["brand"].' '.$content["what_we_do"] ?></h1>
   <p class="lead my-3">
 <?php if ($lang === 'fr') { ?>

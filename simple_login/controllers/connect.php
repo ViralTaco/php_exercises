@@ -1,8 +1,10 @@
 <?php 
-require_once realpath(__DIR__."/internals/init.php");
+require_once "init.php";
 
 /**
- * This file contains the controller to register a user in the MySQL DB
+ * This file contains the user model and controller for user connection
+ * It is based on the following online tutorial:
+ * cf: https://alexwebdevelop.com/user-authentication/
  * 
  * @author: Capobianco Anthony 
  * 
@@ -36,17 +38,10 @@ require_once realpath(__DIR__."/internals/init.php");
     ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
 */
+
 ob_start();
 
-$new_user = get_post_value("nick");
-$new_pass = password_hash(get_post_value("pass"), PASSWORD_DEFAULT);
+echo user_login(get_post_value("nick"), get_post_value("pass"), $conn);
+exit();
 
-if (!does_nick_exist($new_user, $conn)) {
-  if (create_user($new_user, $new_pass, $conn)) {
-    echo SUCCESS; 
-    exit();
-  }
-} else {
-  die(FAILURE);
-}
 ob_end_flush();

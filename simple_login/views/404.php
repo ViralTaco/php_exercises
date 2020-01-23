@@ -1,5 +1,5 @@
 <?php 
-require_once "./internals/init.php";
+require_once realpath(__DIR__."/../controllers/init.php");
 
 $title = $content["404_title"];
 // set error 404
@@ -15,4 +15,5 @@ include HEADER; ?>
       <h2 class="font-weight-normal lead" 
           id="desc"><?= $content["404_message"] ?></h2>
     </div>
-<?php include FOOTER; 
+<?php 
+include FOOTER; 

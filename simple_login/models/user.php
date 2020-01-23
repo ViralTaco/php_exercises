@@ -1,7 +1,8 @@
 <?php 
-require_once realpath(__DIR__."/init.php");
+require_once "constants.php";
+require_once "sql.php";
 /**
- * This file contains the model and controller for the MySQL database
+ * This file contains the model for the user connection
  * It is based on the following online tutorial:
  * cf: https://alexwebdevelop.com/user-authentication/
  * 
@@ -27,32 +28,14 @@ require_once realpath(__DIR__."/init.php");
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-/*
-  accounts table:
 
-    CREATE TABLE `accounts` (
-      `id` INTEGER UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-      `nick` VARCHAR(255) NOT NULL,
-      `pass` VARCHAR(255) NOT NULL,
-    ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
-
-*/
-
-// db variables:
-$conn = null;
-$dsn = "mysql:host=".DB_HOST.";port=".DB_PORT.";dbname=".DB_NAME;
-
-// Connect to db:
-try {  
-  $conn = new PDO($dsn, DB_USER, DB_PASS);
-  $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-  die("Database connection failed.<br>".$e->getMessage());
-}
-
-function does_nick_exist(string $nick, PDO $connection) : bool {
+function does_nick_exist(string $nick) : bool {
+  $connection = get_db();
   $select = $connection->prepare(
-    "SELECT `nick` FROM ".DB_NAME.".`accounts` WHERE `accounts`.`nick` = ?;");
+    "SELECT `nick` FROM ".DB_NAME.".`accounts` 
+      WHERE `accounts`.`nick` = ?;"
+  );
+  
   if ($select->execute([$nick])) {
     while ($row = $select->fetch()) {
       if ($row === $nick) {
@@ -63,23 +46,25 @@ function does_nick_exist(string $nick, PDO $connection) : bool {
   return false;
 }
 
-function create_user(string $nick, string $hash, PDO $connection) : bool {
+function create_user(string $nick, string $hash) : void {
+  $connection = get_db();
   $insert = $connection->prepare(
-    "INSERT INTO ".DB_NAME.".`accounts` (`nick`, `pass`) VALUES (:nick, :hash);"
+    "INSERT INTO ".DB_NAME.".`accounts` (`nick`, `pass`) 
+     VALUES (:nick, :hash);"
   );
   
   $insert->bindValue(":nick", $nick);
   $insert->bindValue(":hash", $hash);
   
   $insert->execute();
-  
-  // check if it worked:
-  return true;
 }
 
-function user_login(string $nick, string $pass, PDO $connection) : string {
-  $preped = $connection->prepare("SELECT `pass` FROM ".DB_NAME.".`accounts` 
-                                  WHERE `accounts`.`nick` = :nick;");
+function user_login(string $nick, string $pass) : string {
+  $connection = get_db();
+  $preped = $connection->prepare(
+    "SELECT `pass` FROM ".DB_NAME.".`accounts` 
+      WHERE `accounts`.`nick` = :nick;"
+  );
 
   $preped->bindValue(":nick", $nick);
   // Execute prepared statment. 

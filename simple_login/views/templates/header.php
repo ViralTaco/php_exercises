@@ -1,9 +1,15 @@
-<?php require_once realpath(__DIR__."/../internals/init.php");
+<?php 
+require_once realpath(__DIR__."/../../controllers/init.php");
 
-// Make sure title is set otherwise redirect to 404 page to avoid PHP error.
+// Make sure title is set otherwise redirect to 404 page.
 if (!isset($title)) { 
   header("Location: ".ER404_PHP); 
-} ?>
+} 
+
+$has_session = array_key_exists("nick", $_SESSION);
+define("INCLUDE_URL", ROOT_URL."views/includes/");
+?>
+
 <!doctype html> <html lang="<?= $lang ?>">
 <head>
   <meta charset="utf-8">
@@ -13,31 +19,32 @@ if (!isset($title)) {
 <!-- bootstrap css -->
   <link rel="stylesheet" 
         type="text/css" 
-        href="<?= ROOT_URL ?>css/bootstrap.min.css">
+        href="<?= INCLUDE_URL ?>css/bootstrap.min.css">
 <!-- custom css -->
   <link rel="stylesheet" 
         type="text/css" 
-        href="<?= ROOT_URL ?>css/styles.css">
+        href="<?= INCLUDE_URL ?>css/styles.css">
 <!-- jQuery js -->
   <script type="text/javascript" 
-          src="<?= ROOT_URL ?>js/jquery.min.js"></script>
+          src="<?= INCLUDE_URL ?>js/jquery.min.js"></script>
 <!-- jQuery-ui js -->
   <script type="text/javascript" 
-          src="<?= ROOT_URL ?>js/jquery-ui.min.js"></script>
+          src="<?= INCLUDE_URL ?>js/jquery-ui.min.js"></script>
 <!-- bootstrap js -->
   <script type="text/javascript" 
-          src="<?= ROOT_URL ?>js/bootstrap.min.js"></script>
+          src="<?= INCLUDE_URL ?>js/bootstrap.min.js"></script>
 <!-- language js -->
   <script type="text/javascript">
+    /**
+     * this function sets a cookie for the language 
+     * and reloads the page 
+     *
+     * @param `lang` a string corresponding to a key 
+     *   in the language array (cf: models/localization.php)
+     */
     function setLang(lang) {
-      $.ajax({
-         url: '<?= LANG_PHP ?>'
-      ,  type: 'POST'
-      ,  data: {lang: lang}
-      ,  success: window.location.reload()
-      });
-      
-      return true;
+      document.cookie = `lang=${lang}`;
+      window.location.reload();
     }
     
     $(() => {
@@ -49,11 +56,9 @@ if (!isset($title)) {
     });
   </script>
 
-<?php 
-if (isset($login_php)) {
+<?php if (isset($login_php)) {
   echo $login_php;
 } 
-$has_session = array_key_exists("nick", $_SESSION);
 ?>
 
 </head>
@@ -97,9 +102,7 @@ $has_session = array_key_exists("nick", $_SESSION);
                  role="button" 
                  data-toggle="dropdown" 
                  aria-haspopup="true" 
-                 aria-expanded="false">
-                <?= $content["language"] ?>
-              </a>
+                 aria-expanded="false"><?= $content["language"] ?></a>
               <div class="dropdown-menu" 
                    aria-labelledby="lang-select">
 <?php foreach ($locale as $key => $arr) { ?>
@@ -113,7 +116,7 @@ $has_session = array_key_exists("nick", $_SESSION);
 <?php if (!$has_session) { ?>
             <li class="nav-item mr-2">
               <a class="btn btn-outline-info" 
-                  href="<?= SIGNUP_PHP ?>"><?= $content["signup"] ?></a>
+                 href="<?= SIGNUP_PHP ?>"><?= $content["signup"] ?></a>
             </li>
 <?php } ?>            
             <li class="nav-item mr-2">

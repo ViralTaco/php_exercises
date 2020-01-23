@@ -1,7 +1,10 @@
-<?php require_once "constants.php";
+<?php 
+require_once "constants.php";
 /**
- * This file contains the strings for localization
- *
+ * This file contains the model and controller for the MySQL database
+ * It is based on the following online tutorial:
+ * cf: https://alexwebdevelop.com/user-authentication/
+ * 
  * @author: Capobianco Anthony 
  * 
  * @license: SPDX License Identifier: MIT
@@ -23,42 +26,38 @@
  * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION 
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */  
-$locale = [
-  "fr" => [
-    "language" => "Français",
-    "404_title" => "404 - Page Not Found",
-    "404_message" => "Cette page n'existe pas.",
-    "website_name" => "Login Form",
-    "home" => "Acceuil",
-    "menu" => "Menu",
-    "admin" => "Admin",
-    "login" => "Connection",
-    "logout" => "Déconnection",
-    "signup" => "Inscription",
-    "username" => "Nom d'utilisateur",
-    "password" => "Mot de passe",
-    "coming_soon" => "Bientôt disponible",
-    "brand" => "Notre entreprise",
-    "what_we_do" => "crée des solutions",
-    "confirm_pass" => "Confirmez le mot de passe",
-  ],
-  "en" => [
-    "language" => "English",
-    "404_title" => "404 - Page Not Found",
-    "404_message" => "This page doesn't exist.",
-    "website_name" => "Login Form",
-    "home" => "Home",
-    "menu" => "Menu",
-    "admin" => "Admin",
-    "login" => "Log in",
-    "logout" => "Log out",
-    "signup" => "Sign up",
-    "username" => "Username",
-    "password" => "Password",
-    "coming_soon" => "Coming Soon",
-    "brand" => "Our company",
-    "what_we_do" => "creates solutions",
-    "confirm_pass" => "Confirm password",
-  ]
-];
+ */
+/*
+  accounts table:
+
+    CREATE TABLE `accounts` (
+      `id` INTEGER UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+      `nick` VARCHAR(255) NOT NULL,
+      `pass` VARCHAR(255) NOT NULL,
+      `mail` VARCHAR(255) NOT NULL,
+    ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+
+*/
+
+
+/**
+ * This function creates and returns a connection to the mySQL DB
+ *
+ * @return PDO object handling the database.
+ * 
+ */
+
+function get_db() : PDO {
+  $conn = null;
+  $dsn = "mysql:host=".DB_HOST.";port=".DB_PORT.";dbname=".DB_NAME;
+
+  // Connect to db:
+  try {  
+    $conn = new PDO($dsn, DB_USER, DB_PASS);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+  } catch (PDOException $e) {
+    die("Database connection failed.<br>".$e->getMessage());
+  }
+  
+  return $conn;
+}
