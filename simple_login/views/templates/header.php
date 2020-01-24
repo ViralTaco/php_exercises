@@ -91,7 +91,7 @@ define("INCLUDE_URL", ROOT_URL."views/includes/");
 </head>
 <body>
   <header>
-      <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark" 
+      <nav class="navbar fixed-top w-100 navbar-expand-lg navbar-dark bg-dark" 
            id="main-menu">
       <a class="navbar-brand"><?= $content["website_name"] ?></a>
       <button class="navbar-toggler" 

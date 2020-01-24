@@ -35,7 +35,7 @@ $card_content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, <br>
 $cards = [];
 for ($i = 0; $i < 3; ++$i) {
   $cards[$i] = new Card("Title",  $card_content, 
-                        "https://via.placeholder.com/300x225/55595c/eceeef/?text=Placeholder");
+                        "https://via.placeholder.com/300x190/55595c/eceeef/?text=Placeholder");
 }
 
 include CARDS;
