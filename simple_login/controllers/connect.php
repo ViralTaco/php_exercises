@@ -35,6 +35,7 @@ require_once "init.php";
       `id` INTEGER UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
       `nick` VARCHAR(255) NOT NULL,
       `pass` VARCHAR(255) NOT NULL,
+      `mail` VARCHAR(255) NOT NULL,
     ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
 */

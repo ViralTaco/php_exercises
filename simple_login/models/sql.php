@@ -49,14 +49,14 @@ require_once "constants.php";
 
 function get_db() : PDO {
   $conn = null;
-  $dsn = "mysql:host=".DB_HOST.";port=".DB_PORT.";dbname=".DB_NAME;
-
   // Connect to db:
   try {  
-    $conn = new PDO($dsn, DB_USER, DB_PASS);
+    $conn = new PDO("mysql:host=".DB_HOST.";port=".DB_PORT.";dbname=".DB_NAME, 
+                    DB_USER, 
+                    DB_PASS);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
   } catch (PDOException $e) {
-    die("Database connection failed.<br>".$e->getMessage());
+    die("Database connection failed.<br>Message: ".$e->getMessage());
   }
   
   return $conn;

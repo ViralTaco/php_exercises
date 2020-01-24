@@ -19,7 +19,8 @@ if (!isset($is_signup) || !$is_signup) {
 // Set the title. 
 $title = $action_str;
 // login.js buffer 
-ob_start(); ?>
+ob_start(); 
+?>
 <!-- login js -->
 <script type="text/javascript">
   function failShake() {
@@ -31,6 +32,8 @@ ob_start(); ?>
     const pass = $('#pass').val();
 
 <?php if ($is_signup) { ?>    
+    const mail = $('#mail').val();
+
     if (pass !== $('#pass-conf').val()) {
       failShake();
       return false;
@@ -39,7 +42,13 @@ ob_start(); ?>
     $.ajax({
         url: '<?= $action_php ?>'
     ,  type: 'POST'
-    ,  data: {nick: nick, pass: pass}
+    ,  data: {
+         nick: nick 
+      ,  pass: pass
+<?php if ($is_signup) { ?>
+      ,  mail: mail
+<?php } ?>
+      }
     });
     
     return true;
@@ -59,6 +68,8 @@ ob_start(); ?>
           });
         });
         
+      } else if (response === '2') {
+        //TODO: Handle wrong email
       } else {
         failShake();
       }
@@ -69,6 +80,6 @@ ob_start(); ?>
 <?php
 $login_php = ob_get_clean();
 
-include HEADER;
+include HEADER; 
 include FORMS;
 include FOOTER;

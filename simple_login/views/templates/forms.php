@@ -1,10 +1,12 @@
+<main id="main"
+      role="main">  
 <form class="form-signin text-center choice" 
       id="login-form"
       method="POST"
 <?php if (!isset($login_php)) { ?>
-        action="<?= $action_php ?>"
+      action="<?= $action_php ?>"
 <?php } else { ?>
-        action="javascript: submitForm();"
+      action="javascript: submitForm();"
 <?php } ?>
       >
 <!-- success animation -->      
@@ -22,8 +24,9 @@
   </div>
 <!-- login form -->  
   <div id="login-div">
+<!-- username -->  
     <label for="nick" 
-          class="sr-only"><?= $content["username"] ?></label>
+           class="sr-only"><?= $content["username"] ?></label>
     <input type="text" 
            id="nick" 
            name="nick"
@@ -31,6 +34,18 @@
            placeholder="<?= $content['username'] ?>"
            required 
            autofocus>
+<?php if ($is_signup) { ?>         
+<!-- email -->          
+    <label for="mail" 
+           class="sr-only"><?= $content["mail"] ?></label>
+    <input type="email" 
+           id="mail" 
+           name="mail"
+           class="form-control" 
+           placeholder="<?= $content['mail'] ?>"
+           required>
+<?php } ?>
+<!-- password -->
     <label for="pass" 
            class="sr-only"><?= $content["password"] ?></label>
     <input type="password" 
@@ -53,4 +68,4 @@
     <button class="btn btn-lg btn-block <?= $btn_class ?>" 
             type="submit"><?= $action_str ?></button>
   </div>
-</form>
+</form></main>

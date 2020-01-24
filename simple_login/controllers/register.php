@@ -33,6 +33,7 @@ require_once "init.php";
       `id` INTEGER UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
       `nick` VARCHAR(255) NOT NULL,
       `pass` VARCHAR(255) NOT NULL,
+      `mail` VARCHAR(255) NOT NULL,
     ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
 */
@@ -40,9 +41,13 @@ ob_start();
 
 $new_user = get_post_value("nick");
 $new_pass = password_hash(get_post_value("pass"), PASSWORD_DEFAULT);
+$new_mail = get_post_value("mail");
 
 if (!does_nick_exist($new_user)) {
-  if (create_user($new_user, $new_pass)) {
+  if (!is_valid_mail($new_mail)) {
+    echo INVALID_EMAIL;
+    exit();
+  } else if (create_user($new_user, $new_pass, $new_mail)) {
     echo SUCCESS; 
     exit();
   }

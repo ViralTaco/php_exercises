@@ -1,6 +1,7 @@
 <?php 
 require_once "constants.php";
 require_once "sql.php";
+
 /**
  * This file contains the model for the user connection
  * It is based on the following online tutorial:
@@ -37,26 +38,25 @@ function does_nick_exist(string $nick) : bool {
   );
   
   if ($select->execute([$nick])) {
-    while ($row = $select->fetch()) {
-      if ($row === $nick) {
-        return true;
-      }
-    }
+    // if fetch doesn't return NULL or false the nick exists
+    return $select->fetch(PDO::FETCH_ASSOC) !== false;
   }
   return false;
 }
 
-function create_user(string $nick, string $hash) : void {
+function create_user(string $nick, string $hash, string $mail) : bool {
+  if (does_nick_exist($nick)) { return false; }
   $connection = get_db();
   $insert = $connection->prepare(
-    "INSERT INTO ".DB_NAME.".`accounts` (`nick`, `pass`) 
-     VALUES (:nick, :hash);"
+    "INSERT INTO ".DB_NAME.".`accounts` (`nick`, `pass`, `mail`) 
+     VALUES (:nick, :hash, :mail);"
   );
   
   $insert->bindValue(":nick", $nick);
   $insert->bindValue(":hash", $hash);
+  $insert->bindValue(":mail", $mail);
   
-  $insert->execute();
+  return $insert->execute() !== false;
 }
 
 function user_login(string $nick, string $pass) : string {
@@ -84,4 +84,8 @@ function user_login(string $nick, string $pass) : string {
     
     return FAILURE;
   } 
+}
+
+function is_valid_mail(string $email) : bool {
+  return filter_var($email, FILTER_VALIDATE_EMAIL);
 }

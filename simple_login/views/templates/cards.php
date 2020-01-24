@@ -1,15 +1,10 @@
-<?php 
-session_start();
-require_once realpath(__DIR__."/../models/constants.php");
-require_once realpath(__DIR__."/../models/localization.php");
-require_once realpath(__DIR__."/../models/sql.php");
-require_once realpath(__DIR__."/../models/user.php");
+<?php
+require_once realpath(__DIR__."/../../controllers/init.php");
+require_once realpath(__DIR__."/../../models/card.php");
 
 /**
- * This file contains the controller responsible for setting up
- * the global variables. It start the session, includes the necessary 
- * models (the: "headers"). It defines a `get` function and checks 
- * and/or sets a cookie for localization. 
+ * 
+ * This file contains the view (template) for cards
  * 
  * @author: Capobianco Anthony 
  * 
@@ -34,27 +29,25 @@ require_once realpath(__DIR__."/../models/user.php");
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/**
- * This function gets a post value and sanitizes it
- *
- * @param $key the key for $_POST[$key]
- *
- * @return a string with escaped text
+/*
+ * $cards = Array(Card);
  */
-function get_post_value(string $key) : string {
-  return stripslashes(htmlspecialchars($_POST[$key]));
+ob_start();
+
+if (!isset($cards)) {
+  header("Location: ".ER404_PHP);
+  exit();
 }
 
-// check if the 'lang' cookie is set.
-if (!array_key_exists("lang", $_COOKIE)
-// if it exists check if it's a valid locale
-|| !array_key_exists($_COOKIE["lang"], $locale)) {
-// if not set the lang to 'fr'
-  setcookie("lang", DEFAULT_LANG);
-  $lang = DEFAULT_LANG;
-} else {
-  $lang = $_COOKIE["lang"];
-}
-
-// set the content array to the right language
-$content = $locale[$lang];
+foreach ($cards as $key => $card) { ?>
+<!-- card: <?= ($key + 1).' ('.$card->title.')' ?> -->
+<div class="col-md-4">
+  <div class="card mb-4 shadow-sm">
+    <img class="card-img-top" <?= $card->img ?>>
+    <div class="card-body">
+      <p class="card-text"><?= $card->content ?></p>
+    </div>
+  </div>
+</div>  
+<?php }
+ob_end_flush();
