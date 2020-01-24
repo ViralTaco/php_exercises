@@ -38,7 +38,7 @@ if (!isset($sorry_head) || !isset($sorry_content)) {
 <main class="d-flex justify-content-center align-items-center" 
       id="main"
       style="height: 100vh;">
-  <h1 class="mr-3 pr-3 align-top border-right inline-block align-content-center">
+  <h1 class="align-top inline-block align-content-center">
     <?= $sorry_head ?>
   </h1>
   <div class="inline-block align-middle">
