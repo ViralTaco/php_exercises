@@ -1,4 +1,4 @@
-<?php  error_reporting( E_ALL | E_STRICT ); ini_set( 'display_errors', 1 );
+<?php  // error_reporting(E_ALL | E_STRICT); ini_set('display_errors', 1);
 require_once realpath(__DIR__."/controllers/init.php");
 require_once realpath(__DIR__."/models/card.php");
 
