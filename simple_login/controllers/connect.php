@@ -42,7 +42,7 @@ require_once "init.php";
 
 ob_start();
 
-echo user_login(get_post_value("nick"), get_post_value("pass"), $conn);
+echo user_login(get_post_value("nick"), get_post_value("pass"));
 exit();
 
 ob_end_flush();
