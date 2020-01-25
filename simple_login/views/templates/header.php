@@ -60,6 +60,9 @@ define("INCLUDE_URL", ROOT_URL."views/includes/");
 <!-- bootstrap js -->
   <script type="text/javascript" 
           src="<?= INCLUDE_URL ?>js/bootstrap.min.js"></script>
+<!-- popper js -->
+  <script type="text/javascript" 
+          src="<?= INCLUDE_URL ?>js/popper.min.js"></script>
 <!-- language js -->
   <script type="text/javascript">
     /**

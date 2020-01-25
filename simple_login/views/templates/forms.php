@@ -3,12 +3,7 @@
 <form class="form-signin text-center choice" 
       id="login-form"
       method="POST"
-<?php if (!isset($login_php)) { ?>
-      action="<?= $action_php ?>"
-<?php } else { ?>
-      action="javascript: submitForm();"
-<?php } ?>
-      >
+      action="<?= $action_php ?>">
 <!-- success animation -->      
   <div id="success"
        class="hidden">

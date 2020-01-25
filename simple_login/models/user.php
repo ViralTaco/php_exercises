@@ -59,7 +59,7 @@ function create_user(string $nick, string $hash, string $mail) : bool {
   return $insert->execute() !== false;
 }
 
-function user_login(string $nick, string $pass) : string {
+function user_login(string $nick, string $pass) : bool {
   $connection = get_db();
   $preped = $connection->prepare(
     "SELECT `pass` FROM ".DB_NAME.".`accounts` 
@@ -79,10 +79,10 @@ function user_login(string $nick, string $pass) : string {
       if (!array_key_exists("nick", $_SESSION)) {
         $_SESSION["nick"] = hash("sha256", $nick);
       }
-      return SUCCESS;
+      return true;
     }
     
-    return FAILURE;
+    return false;
   } 
 }
 

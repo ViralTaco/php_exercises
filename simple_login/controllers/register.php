@@ -45,14 +45,12 @@ $new_mail = get_post_value("mail");
 
 if (!does_nick_exist($new_user)) {
   if (!is_valid_mail($new_mail)) {
-    echo INVALID_EMAIL;
-    exit();
+    die($content["invalid_mail"]);
   } else if (create_user($new_user, $new_pass, $new_mail)) {
-    echo SUCCESS; 
-    exit();
+    die(SUCCESS); 
   }
 } else {
-  die(FAILURE);
+  die($content["nick_used"]);
 }
 
 ob_end_flush();

@@ -55,23 +55,31 @@ ob_start();
   }
   
   $(() => {
+    $('#login-form').on("submit", (event) => {
+      event.preventDefault();
+      submitForm();
+    });
+    
     $(document).ajaxSuccess((event, xhr, settings) => {
       if (settings.url !== '<?= $action_php ?>') {
         return;
       }
       
       const response = xhr.responseText;
-      if (response === '1') {
+      if (response === '<?= SUCCESS ?>') {
         $('#login-div').fadeOut(300, () => {
           $('#success').fadeIn('fast').delay(900).fadeOut('fast', () => { 
             window.location = '<?= INDEX_PHP ?>'; 
           });
         });
         
-      } else if (response === '2') {
-        //TODO: Handle wrong email
       } else {
         failShake();
+        $('#login-form').prepend(`
+<!-- failure -->        
+          <div class="alert alert-danger" 
+               role="alert">${response}</div>`
+        );
       }
     });
   });

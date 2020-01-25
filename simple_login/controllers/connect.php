@@ -42,7 +42,10 @@ require_once "init.php";
 
 ob_start();
 
-echo user_login(get_post_value("nick"), get_post_value("pass"));
-exit();
+if (!user_login(get_post_value("nick"), get_post_value("pass"))) {
+  die($content["login_failure"]);
+} else {
+  die(SUCCESS);
+}
 
 ob_end_flush();

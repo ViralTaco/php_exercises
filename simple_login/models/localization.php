@@ -44,7 +44,9 @@ $locale = [
     "brand" => "Notre entreprise",
     "what_we_do" => "crée des solutions",
     "confirm_pass" => "Confirmez le mot de passe",
-    "invalid_mail" => "E-mail adresse invalide",
+    "invalid_mail" => "Adresse e-mail invalide",
+    "nick_used" => "Ce nom d'utilisateur est indisponible",
+    "login_failure" => "Nom d'utilisateur ou mot de passe incorrect",
   ],
   "en" => [
     "language" => "English",
@@ -65,5 +67,7 @@ $locale = [
     "what_we_do" => "creates solutions",
     "confirm_pass" => "Confirm password",
     "invalid_mail" => "Invalid e-mail address",
+    "nick_used" => "Username unavailable",
+    "login_failure" => "Invalid username or password",
   ]
 ];
