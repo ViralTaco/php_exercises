@@ -2,6 +2,10 @@
 if (!defined("VT_CONSTANTS_PHP")) {
   define("VT_CONSTANTS_PHP", true);
   
+  // debug: 
+  // TODO: DON'T DEFINE THIS IN PROD
+  define("DEBUG", true);
+  
   // default language:
   define("DEFAULT_LANG", "fr");
 

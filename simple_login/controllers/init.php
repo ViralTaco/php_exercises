@@ -58,3 +58,9 @@ if (!array_key_exists("lang", $_COOKIE)
 
 // set the content array to the right language
 $content = $locale[$lang];
+
+if (defined("DEBUG") && DEBUG === true) {
+  error_reporting(E_ALL | E_STRICT); 
+  ini_set('display_errors', 1);
+  $content["website_name"] = "DEBUG";
+}

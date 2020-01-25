@@ -78,7 +78,12 @@ ob_start();
 </script>
 
 <?php
-$login_php = ob_get_clean();
+// set $login_php to add js to header. 
+// because of a compatibility issue with firefox this script
+// can't be used anymore. The connection process will now be php only. 
+// until we need the script again we'll need to clean the buffer instead.
+//$login_php = ob_get_clean();
+ob_end_clean();
 
 include HEADER; 
 include FORMS;

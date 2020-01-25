@@ -1,5 +1,6 @@
 <?php 
 require_once "init.php";
+require_once realpath(__DIR__."/../models/forms.php");
 
 /**
  * This file contains the user model and controller for user connection
@@ -40,9 +41,10 @@ require_once "init.php";
 
 */
 
-ob_start();
-
-echo user_login(get_post_value("nick"), get_post_value("pass"));
-exit();
-
-ob_end_flush();
+if (!user_login(get_post_value("nick"), get_post_value("pass"))) {
+  header(login_error($content["login_failure"]));
+  exit();
+} else {
+  header(login_success());
+  exit();
+}

@@ -3,13 +3,14 @@
 <form class="form-signin text-center choice" 
       id="login-form"
       method="POST"
-<?php if (!isset($login_php)) { ?>
-      action="<?= $action_php ?>"
-<?php } else { ?>
-      action="javascript: submitForm();"
+      action="<?= $action_php ?>">
+<?php if (isset($GLOBALS["error_message"])) { ?>      
+<!-- failure -->
+  <div class="alert alert-danger" role="alert">
+    <?= $error_message ?>
+  </div>      
 <?php } ?>
-      >
-<!-- success animation -->      
+<!-- success animation -->
   <div id="success"
        class="hidden">
     <div class="swal2-icon swal2-success swal2-animate-success-icon" 

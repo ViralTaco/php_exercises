@@ -1,5 +1,6 @@
 <?php 
 require_once "init.php";
+require_once realpath(__DIR__."/../models/forms.php");
 
 /**
  * This file contains the controller to register a user in the MySQL DB
@@ -45,14 +46,15 @@ $new_mail = get_post_value("mail");
 
 if (!does_nick_exist($new_user)) {
   if (!is_valid_mail($new_mail)) {
-    echo INVALID_EMAIL;
+    header(signup_error($content["invalid_mail"]));
     exit();
-  } else if (create_user($new_user, $new_pass, $new_mail)) {
-    echo SUCCESS; 
+  } else if (create_user($new_user, $new_pass, $new_mail)) { // try create_user
+    header(signup_success());
     exit();
   }
-} else {
-  die(FAILURE);
+} else { // nick already exists
+  header(signup_error($content["nick_used"]));
+  exit();
 }
 
 ob_end_flush();

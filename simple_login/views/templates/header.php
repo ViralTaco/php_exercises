@@ -60,6 +60,9 @@ define("INCLUDE_URL", ROOT_URL."views/includes/");
 <!-- bootstrap js -->
   <script type="text/javascript" 
           src="<?= INCLUDE_URL ?>js/bootstrap.min.js"></script>
+<!-- popper js -->
+  <script type="text/javascript" 
+          src="<?= INCLUDE_URL ?>js/popper.min.js"></script>
 <!-- language js -->
   <script type="text/javascript">
     /**
@@ -93,7 +96,9 @@ define("INCLUDE_URL", ROOT_URL."views/includes/");
   <header>
       <nav class="navbar fixed-top w-100 navbar-expand-lg navbar-dark bg-dark" 
            id="main-menu">
-      <a class="navbar-brand"><?= $content["website_name"] ?></a>
+<!-- branding -->          
+      <a class="navbar-brand"
+         href="<?= INDEX_PHP ?>"><?= $content["website_name"] ?></a>
       <button class="navbar-toggler" 
               type="button" 
               data-toggle="collapse" 
