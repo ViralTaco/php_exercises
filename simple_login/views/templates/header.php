@@ -149,19 +149,18 @@ define("INCLUDE_URL", ROOT_URL."views/includes/");
 <?php } ?>
               </div>
             </li>
-<!-- sign up -->
-<?php if (!$has_session) { ?>
             <li class="nav-item mr-2">
+<?php if (!$has_session) { ?>
+<!-- sign up -->
               <a class="btn btn-outline-info" 
                  href="<?= SIGNUP_PHP ?>"><?= $content["signup"] ?></a>
-            </li>
-<?php } ?>            
+            </li>      
             <li class="nav-item mr-2">
-<!-- log in/out -->            
-<?php if (!$has_session) { ?>
+<!-- log in -->                  
               <a class="btn btn-outline-success" 
                  href="<?= LOGIN_PHP ?>"><?= $content["login"] ?></a>
 <?php } else { ?>
+<!-- log out -->                  
               <a class="btn btn-outline-danger" 
                  href="<?= LOGOUT_PHP ?>"><?= $content["logout"] ?></a>
 <?php } ?>

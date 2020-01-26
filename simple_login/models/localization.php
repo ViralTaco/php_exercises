@@ -47,6 +47,7 @@ $locale = [
     "invalid_mail" => "Adresse e-mail invalide",
     "nick_used" => "Ce nom d'utilisateur est indisponible",
     "login_failure" => "Nom d'utilisateur ou mot de passe incorrect",
+    "pass_neq" => "La confirmation du mot de passe ne correspond pas à celui d'origine",
   ],
   "en" => [
     "language" => "English",
@@ -69,5 +70,6 @@ $locale = [
     "invalid_mail" => "Invalid e-mail address",
     "nick_used" => "Username unavailable",
     "login_failure" => "Invalid username or password",
+    "pass_neq" => "Password and password confirmation do not match",
   ]
 ];

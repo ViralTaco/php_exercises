@@ -23,8 +23,16 @@ ob_start();
 ?>
 <!-- login js -->
 <script type="text/javascript">
-  function failShake() {
-    $('#login-div').effect('shake');
+  function failShake(response) {
+    $('#login-div').effect('shake')
+                   .complete(
+      $('#login-form').fadeIn('fast')
+                      .prepend(`<!-- failure -->        
+        <div class="alert alert-danger" 
+              id="error-message"
+              role="alert">${response}</div>`
+      )
+    );
   }
   
   function submitForm() {
@@ -57,6 +65,7 @@ ob_start();
   $(() => {
     $('#login-form').on("submit", (event) => {
       event.preventDefault();
+      $('#error-message').fadeOut(100).remove();
       submitForm();
     });
     
@@ -68,18 +77,15 @@ ob_start();
       const response = xhr.responseText;
       if (response === '<?= SUCCESS ?>') {
         $('#login-div').fadeOut(300, () => {
-          $('#success').fadeIn('fast').delay(900).fadeOut('fast', () => { 
+          $('#success').fadeIn('fast')
+                       .delay(900)
+                       .fadeOut('fast', () => { 
             window.location = '<?= INDEX_PHP ?>'; 
           });
         });
         
       } else {
-        failShake();
-        $('#login-form').prepend(`
-<!-- failure -->        
-          <div class="alert alert-danger" 
-               role="alert">${response}</div>`
-        );
+        failShake(response);
       }
     });
   });
