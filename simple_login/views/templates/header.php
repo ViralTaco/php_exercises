@@ -119,10 +119,10 @@ define("INCLUDE_URL", ROOT_URL."views/includes/");
 <!-- menu -->          
             <a class="nav-link"
                href="#"><?= $content["menu"] ?></a>
-          </li>
-<!-- admin -->   
+          </li> 
 <?php if ($has_session) { ?>
           <li class="nav-item">
+<!-- admin -->  
             <a class="nav-link"
                href="<?= ADMIN_PHP ?>"><?= $content["admin"] ?></a>
           </li>
