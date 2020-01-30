@@ -54,8 +54,8 @@ function get_db() : PDO {
   // Connect to db:
   try {  
     $conn = new PDO("mysql:host=".DB_HOST.";port=".DB_PORT.";dbname=".DB_NAME, 
-                    DB_USER, 
-                    DB_PASS);
+          DB_USER, 
+          DB_PASS);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     // Disable "emulated" prepared statements. 
     $conn->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);

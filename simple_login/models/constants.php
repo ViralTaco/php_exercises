@@ -52,7 +52,7 @@ if (!defined("VT_CONSTANTS_PHP")) {
   define("FAILURE", "FAILURE");
   
   // MySQL constants:
-  define("DB_HOST", "127.0.0.1");
+  define("DB_HOST", "localhost");
   define("DB_PORT", "8889");
   define("DB_USER", "notroot");
   define("DB_PASS", "FHfGnqhANotqglqr");

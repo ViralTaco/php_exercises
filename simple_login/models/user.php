@@ -80,7 +80,7 @@ function user_login(string $nick, string $raw_pass) : bool {
       $hash = $row;
     }
     
-    if (isset($hash) && password_verify($raw_pass, $hash[0])) { 
+    if (isset($hash) && password_verify($raw_pass, $hash["pass"])) { 
       if (!array_key_exists("nick", $_SESSION)) {
         $_SESSION["nick"] = $nick;
       }

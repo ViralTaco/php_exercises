@@ -16,6 +16,9 @@ if (!array_key_exists("page", $_GET)) {
   $page = 1;
 } else {
   $page = intval($_GET["page"]);
+  if ($page < 1 || $page > $page_count) {
+    $page = 1;
+  }
 }
 
 $acc = get_accounts_table();
@@ -26,7 +29,9 @@ include HEADER;
   <div class="jumbotron table-responsive col-md-10">
     <h1><?= $title ?></h1>
     <table class="table">
+<!-- table -->          
       <thead>
+<!-- table head -->            
         <tr>
 <?php foreach (get_accounts_columns() as $name) {
   if (array_key_exists($name, $content)) {
@@ -37,6 +42,7 @@ include HEADER;
         </tr> 
       </thead>
       <tbody>
+<!-- table body -->      
 <?php 
 foreach ($acc as $key => $row) { 
   if (empty($row)) {
@@ -56,6 +62,7 @@ foreach ($acc as $key => $row) {
       </tbody>
     </table>
     <nav aria-label="...">
+<!-- page selection -->    
       <ul class="pagination">
 <?php 
 $disabled = ($page > 1) ? "" : "disabled";
@@ -63,18 +70,24 @@ $previous = ($page > 1) ? $page - 1 : 1;
 $next_disabled = ($page < $page_count) ? "" : "disabled";
 $next = ($page < $page_count) ? $page : $page + 1;
 ?>
+<!-- previous page -->
         <li class="page-item <?= $disabled ?>">
-          <a class="page-link" href="?page=<?= $previous ?>" tabindex="-1"><?= $content["previous_page"] ?></a>
+          <a class="page-link" 
+             href="?page=<?= $previous ?>" 
+             tabindex="-1"><?= $content["previous_page"] ?></a>
         </li>
 <?php for ($i = 1; $i <= $page_count; ++$i) { 
   $active = ($page == $i) ? "active" : "";
 ?>        
         <li class="page-item <?= $active ?>">
-          <a class="page-link" href="?page=<?= $i ?>"><?= $i ?></a>
+          <a class="page-link" 
+             href="?page=<?= $i ?>"><?= $i ?></a>
         </li>
-<?php } ?>        
+<?php } ?>
+<!-- next page -->        
         <li class="page-item <?= $next_disabled ?>">
-          <a class="page-link" href="?page=<?= $next ?>"><?= $content["next_page"] ?></a>
+          <a class="page-link" 
+             href="?page=<?= $next ?>"><?= $content["next_page"] ?></a>
         </li>
       </ul>
     </nav>
