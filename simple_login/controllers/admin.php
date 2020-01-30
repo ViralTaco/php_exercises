@@ -1,6 +1,6 @@
 <?php 
 require_once "init.php";
-
+require_once realpath(__DIR__."/../models/Exceptions/ConnectionExceptions.php");
 
 /**
  * This file contains controller for the admin page
@@ -28,12 +28,68 @@ require_once "init.php";
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */  
 
-// If no session is registered redirect to login page
-if (!array_key_exists("nick", $_SESSION)
-// If not admin redirect to login page.
-|| !$is_admin) {
-  header("Location: ".LOGIN_PHP);
-} 
+function clean_array(Array $arr) : Array {
+  foreach ($arr as $key => $row) { 
+    if (empty($row)
+    || !array_key_exists("id", $row) 
+    || !array_key_exists("username", $row) 
+    || !array_key_exists("mail", $row) 
+    || !array_key_exists("isAdmin", $row)) { 
+      unset($arr[$key]);
+      continue; 
+    }
+  }
+  return $arr;
+}
 
-$title = $content["admin"];
+function get_accounts_table(int $page = 0, int $limit = 10) : Array {
+  if (!is_admin()) { throw new NotAdminException(); }
+  $connection = get_db();
+  $select = $connection->prepare("SELECT `id`, `nick`, `mail`, `isAdmin`
+                                  FROM ".DB_NAME.".`accounts` 
+                                  LIMIT :from, :limit;");
+  $from = $page * $limit;
+  $select->bindValue(":from", $from);
+  $select->bindValue(":limit", $from + $limit);
+  
+  $arr = [
+    [ "id", "username", "mail", "isAdmin" ]
+  ];
+  if ($select->execute()) {
+    $tmp = $select->fetchAll(PDO::FETCH_ASSOC);
+    foreach ($tmp as $val) {
+      if (array_key_exists("id", $val) 
+      && array_key_exists("nick", $val) 
+      && array_key_exists("mail", $val) 
+      && array_key_exists("isAdmin", $val)) {
+        $arr[] = [ 
+          "id" => $val["id"],
+          "username" => $val["nick"],
+          "mail" => $val["mail"],
+          "isAdmin" => $val["isAdmin"] == 1,
+        ];
+      } // if array has all keys
+    } // foreach array
+  } // if PDO::execute()
+  return clean_array($arr);
+}
 
+function get_accounts_columns() : Array {
+  return ["id", "username", "mail"];
+}
+
+function accounts_row_count() : int {
+  if (!is_admin()) { throw new NotAdminException(); }
+  $connection = get_db();
+  $select = $connection->prepare("SELECT `id`FROM ".DB_NAME.".`accounts`;");
+  $select->execute();
+  return $select->rowCount();
+}
+
+function page_count(int $limit = 10) : int {
+  $items = accounts_row_count();
+  return ($items >= $limit)
+       ? 0
+       : intval($items / $limit) + 1
+       ;
+}

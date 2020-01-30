@@ -50,6 +50,8 @@ $locale = [
     "nick_used" => "Ce nom d'utilisateur est indisponible",
     "login_failure" => "Nom d'utilisateur ou mot de passe incorrect",
     "pass_neq" => "La confirmation du mot de passe ne correspond pas à celui d'origine",
+    "previous_page" => "Précédente",
+    "next_page" => "Suivante",
   ],
   "en" => [
     "language" => "English",
@@ -75,5 +77,7 @@ $locale = [
     "nick_used" => "Username unavailable",
     "login_failure" => "Invalid username or password",
     "pass_neq" => "Password and password confirmation do not match",
+    "previous_page" => "Previous",
+    "next_page" => "Next",
   ]
 ];

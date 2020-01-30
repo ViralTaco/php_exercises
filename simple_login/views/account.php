@@ -13,13 +13,18 @@ $account_content = get_user($nick);
 
 include HEADER;
 ?>
-<main class="container"
+<main class="d-flex justify-content-center align-items-center bg-light"
       role="main">  
-  <div class="jumbotron">
+  <div class="jumbotron col-md-6">
     <h1><?= $title ?></h1>
     <table class="table">
-<?php foreach ($account_content as $k => $v) { ?>
-  
+<?php foreach ($account_content as $key => $value) { ?>
+    <tr>
+      <th scope="row"><?= $content[$key] ?></th>
+      <br>
+      <td><?= $value ?></td>
+      <td class="tools"></td>
+    </tr>
 <?php } ?>
     </table>
   </div>

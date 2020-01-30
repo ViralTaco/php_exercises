@@ -34,19 +34,21 @@ require_once "HashedPassword.php";
 function does_nick_exist(string $nick) : bool {
   $connection = get_db();
   $select = $connection->prepare(
-    "SELECT `nick` FROM ".DB_NAME.".`accounts` 
-      WHERE `accounts`.`nick` = ?;"
+    "SELECT `nick` 
+     FROM ".DB_NAME.".`accounts` 
+     WHERE `accounts`.`nick` = ?;"
   );
   
-  if ($select->execute([$nick])) {
-    /// TODO: Comment and return statements can't both be right. Fix it. 
+  if ($select->execute([$nick])) { 
     // if fetch doesn't return NULL or false the nick exists
-    return $select->fetch(PDO::FETCH_ASSOC) !== false;
+    return $select->fetch(PDO::FETCH_ASSOC) != false;
   }
   return false;
 }
 
-function create_user(string $nick, HashedPassword $hash, string $mail) : bool {
+function create_user(string $nick, 
+                     HashedPassword $hash, 
+                     string $mail) : bool {
   if (does_nick_exist($nick)) { return false; }
   $connection = get_db();
   $insert = $connection->prepare(
@@ -55,7 +57,7 @@ function create_user(string $nick, HashedPassword $hash, string $mail) : bool {
   );
   
   $insert->bindValue(":nick", $nick);
-  $insert->bindValue(":hash", $hash->$hash);
+  $insert->bindValue(":hash", $hash);
   $insert->bindValue(":mail", $mail);
   
   return $insert->execute() !== false;
@@ -64,8 +66,9 @@ function create_user(string $nick, HashedPassword $hash, string $mail) : bool {
 function user_login(string $nick, string $raw_pass) : bool {
   $connection = get_db();
   $preped = $connection->prepare(
-    "SELECT `pass` FROM ".DB_NAME.".`accounts` 
-      WHERE `accounts`.`nick` = :nick;"
+    "SELECT `pass` 
+     FROM ".DB_NAME.".`accounts` 
+     WHERE `accounts`.`nick` = :nick;"
   );
 
   $preped->bindValue(":nick", $nick);
@@ -79,13 +82,34 @@ function user_login(string $nick, string $raw_pass) : bool {
     
     if (isset($hash) && password_verify($raw_pass, $hash[0])) { 
       if (!array_key_exists("nick", $_SESSION)) {
-        $_SESSION["nick"] = hash("sha256", $nick);
+        $_SESSION["nick"] = $nick;
       }
       return true;
     }
     
     return false;
   } 
+}
+
+function get_user(string $nick) {
+  $connection = get_db();
+  $preped = $connection->prepare(
+    "SELECT `nick`, `mail`
+     FROM ".DB_NAME.".`accounts` 
+     WHERE `accounts`.`nick` = :nick;"
+  );
+  $preped->bindValue(":nick", $nick);
+  
+  if ($preped->execute()) {
+    $tmp = $preped->fetch(PDO::FETCH_ASSOC);
+    if (array_key_exists("nick", $tmp) && array_key_exists("mail", $tmp)) {
+      return [ 
+        "username" => $tmp["nick"],
+        "mail" => $tmp["mail"],
+      ];
+    }
+  }
+  return [];
 }
 
 function is_valid_mail(string $email) : bool {
@@ -100,8 +124,9 @@ function is_admin() : bool {
   
   $connection = get_db();
   $select = $connection->prepare(
-    "SELECT `isAdmin` FROM ".DB_NAME.".`accounts` 
-      WHERE `accounts`.`nick` = :nick;"
+    "SELECT `isAdmin` 
+     FROM ".DB_NAME.".`accounts` 
+     WHERE `accounts`.`nick` = :nick;"
   );
   
   $select->bindValue(":nick", $_SESSION["nick"]);  
@@ -110,23 +135,11 @@ function is_admin() : bool {
     $val = null;
     
     while ($row = $select->fetch()) {
-      $val = $row;
+      if (array_key_exists("isAdmin", $row)) {
+        return $row["isAdmin"] == 1;
+      }
     }
-    
-    return $val == 1;
   } 
   return false;
 }
 
-function get_user(string $nick) {
-  $connection = get_db();
-  $preped = $connection->prepare(
-    "SELECT `nick`, `mail`
-     FROM ".DB_NAME.".`accounts` 
-     WHERE `accounts`.`nick` = :nick;"
-  );
-  $preped->bindValue(":nick", $nick);
-  
-  $result = $preped->execute();
-  return $preped->fetch();
-}

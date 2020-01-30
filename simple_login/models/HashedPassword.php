@@ -30,7 +30,7 @@ require_once realpath(__DIR__."/../controllers/init.php");
  */
 
 class HashedPassword {
-  public $hash;
+  protected $hash;
   
   public function __construct(string $raw_pass, string $raw_conf) {
     if (empty($raw_pass) || $raw_conf !== $raw_conf) {
@@ -38,6 +38,10 @@ class HashedPassword {
         "HashedPassword() was passed an empty string."
       );
     }
-    $this->hash = password_hash($raw_pass, PASSWORD_DEFAULT);
+    $this->hash = (string) password_hash($raw_pass, PASSWORD_DEFAULT);
+  }
+  
+  public function __toString() : string {
+    return $this->hash;
   }
 }
