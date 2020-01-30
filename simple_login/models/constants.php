@@ -2,6 +2,9 @@
 if (!defined("VT_CONSTANTS_PHP")) {
   define("VT_CONSTANTS_PHP", true);
   
+  // DEBUG VERSION. 
+  define("DEBUG_BUILD", true);
+  
   // default language:
   define("DEFAULT_LANG", "fr");
 
@@ -25,6 +28,7 @@ if (!defined("VT_CONSTANTS_PHP")) {
   define("ER404_PHP", ROOT_URL."views/404.php");
   define("SIGNUP_PHP", ROOT_URL."views/signup.php");
   define("ADMIN_PHP", ROOT_URL."views/admin.php");
+  define("ACCOUNT_PHP", ROOT_URL."views/account.php");
   
   // controller URLs:
   define("CONNECT_PHP", ROOT_URL."controllers/connect.php");

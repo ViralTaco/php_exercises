@@ -1,10 +1,11 @@
-<?php 
-require_once "init.php";
-
-
+<?php
+require_once realpath(__DIR__."/../controllers/init.php");
 /**
- * This file contains controller for the admin page
- *
+ * 
+ * This file contains the model for the user password hashes.
+ * The idea is to have a specific type so a hashed password 
+ * can't ever be confused with a plain string. 
+ * 
  * @author: Capobianco Anthony 
  * 
  * @license: SPDX License Identifier: MIT
@@ -26,14 +27,17 @@ require_once "init.php";
  * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION 
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */  
+ */
 
-// If no session is registered redirect to login page
-if (!array_key_exists("nick", $_SESSION)
-// If not admin redirect to login page.
-|| !$is_admin) {
-  header("Location: ".LOGIN_PHP);
-} 
-
-$title = $content["admin"];
-
+class HashedPassword {
+  public $hash;
+  
+  public function __construct(string $raw_pass, string $raw_conf) {
+    if (empty($raw_pass) || $raw_conf !== $raw_conf) {
+      throw new InvalidArgumentException(
+        "HashedPassword() was passed an empty string."
+      );
+    }
+    $this->hash = password_hash($raw_pass, PASSWORD_DEFAULT);
+  }
+}

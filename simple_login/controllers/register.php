@@ -1,5 +1,6 @@
 <?php 
 require_once "init.php";
+require_once realpath(__DIR__."/../models/HashedPassword.php");
 
 /**
  * This file contains the controller to register a user in the MySQL DB
@@ -34,13 +35,20 @@ require_once "init.php";
       `nick` VARCHAR(255) NOT NULL,
       `pass` VARCHAR(255) NOT NULL,
       `mail` VARCHAR(255) NOT NULL,
+      `isAdmin` BOOLEAN NOT NULL DEFAULT FALSE,
     ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
 */
 ob_start();
 
 $new_user = get_post_value("nick");
-$new_pass = password_hash(get_post_value("pass"), PASSWORD_DEFAULT);
+try {
+  $new_pass = new HashedPassword(get_post_value("pass"),
+                                 get_post_value("conf"));
+} catch (Exception $e) {
+  die($content["invalid_pass"]);
+}
+
 $new_mail = get_post_value("mail");
 
 if (!does_nick_exist($new_user)) {

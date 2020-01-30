@@ -122,7 +122,7 @@ define("INCLUDE_URL", ROOT_URL."views/includes/");
             <a class="nav-link"
                href="#"><?= $content["menu"] ?></a>
           </li> 
-<?php if ($has_session) { ?>
+<?php if ($is_admin) { ?>
           <li class="nav-item">
 <!-- admin -->  
             <a class="nav-link"
@@ -162,6 +162,11 @@ define("INCLUDE_URL", ROOT_URL."views/includes/");
               <a class="btn btn-outline-success" 
                  href="<?= LOGIN_PHP ?>"><?= $content["login"] ?></a>
 <?php } else { ?>
+<!-- user account -->
+              <a class="btn btn-outline-light"
+                 href="<?= ACCOUNT_PHP ?>"><?= $content["account"] ?></a>
+            </li>
+            <li class="nav-item mr-2">
 <!-- log out -->                  
               <a class="btn btn-outline-danger" 
                  href="<?= LOGOUT_PHP ?>"><?= $content["logout"] ?></a>

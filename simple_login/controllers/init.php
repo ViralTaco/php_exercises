@@ -1,6 +1,14 @@
 <?php 
 session_start();
 require_once realpath(__DIR__."/../models/constants.php");
+
+if (defined("DEBUG_BUILD")) {
+  // enable error reporting
+  error_reporting(E_ALL | E_STRICT); 
+  // display errors
+  ini_set('display_errors', 1);
+}
+
 require_once realpath(__DIR__."/../models/localization.php");
 require_once realpath(__DIR__."/../models/sql.php");
 require_once realpath(__DIR__."/../models/user.php");
@@ -42,7 +50,7 @@ require_once realpath(__DIR__."/../models/user.php");
  * @return a string with escaped text
  */
 function get_post_value(string $key) : string {
-  return stripslashes(htmlspecialchars($_POST[$key]));
+  return $_POST[$key];
 }
 
 // check if the 'lang' cookie is set.
@@ -58,3 +66,4 @@ if (!array_key_exists("lang", $_COOKIE)
 
 // set the content array to the right language
 $content = $locale[$lang];
+$is_admin = is_admin();

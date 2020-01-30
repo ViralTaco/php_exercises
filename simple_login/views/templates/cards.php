@@ -1,6 +1,6 @@
 <?php
 require_once realpath(__DIR__."/../../controllers/init.php");
-require_once realpath(__DIR__."/../../models/card.php");
+require_once realpath(__DIR__."/../../models/Card.php");
 
 /**
  * 

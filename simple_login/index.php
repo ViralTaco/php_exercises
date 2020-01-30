@@ -1,6 +1,6 @@
-<?php  // error_reporting(E_ALL | E_STRICT); ini_set('display_errors', 1);
+<?php
 require_once realpath(__DIR__."/controllers/init.php");
-require_once realpath(__DIR__."/models/card.php");
+require_once realpath(__DIR__."/models/Card.php");
 
 $title = $content["home"];
 define("IMG_URL", ROOT_URL."/views/includes/img");
@@ -34,7 +34,8 @@ $card_content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, <br>
   Odio ut sem nulla pharetra diam.";
 $cards = [];
 for ($i = 0; $i < 3; ++$i) {
-  $cards[$i] = new Card("Title",  $card_content, 
+  $cards[$i] = new Card("Title ".($i + 1),  
+                        $card_content, 
                         "https://via.placeholder.com/300x190/55595c/eceeef/?text=Placeholder");
 }
 

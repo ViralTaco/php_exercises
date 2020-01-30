@@ -36,6 +36,7 @@ require_once "init.php";
       `nick` VARCHAR(255) NOT NULL,
       `pass` VARCHAR(255) NOT NULL,
       `mail` VARCHAR(255) NOT NULL,
+      `isAdmin` BOOLEAN NOT NULL DEFAULT FALSE,
     ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
 */

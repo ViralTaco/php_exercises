@@ -1,5 +1,6 @@
 <?php 
 require_once "constants.php";
+require_once realpath(__DIR__."/Exceptions/ConnectionExceptions.php");
 /**
  * This file contains the model and controller for the MySQL database
  * It is based on the following online tutorial:
@@ -35,6 +36,7 @@ require_once "constants.php";
       `nick` VARCHAR(255) NOT NULL,
       `pass` VARCHAR(255) NOT NULL,
       `mail` VARCHAR(255) NOT NULL,
+      `isAdmin` BOOLEAN NOT NULL DEFAULT FALSE,
     ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
 */
@@ -55,6 +57,8 @@ function get_db() : PDO {
                     DB_USER, 
                     DB_PASS);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    // Disable "emulated" prepared statements. 
+    $conn->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
   } catch (PDOException $e) {
     die("Database connection failed.<br>Message: ".$e->getMessage());
   }

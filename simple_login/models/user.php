@@ -1,6 +1,7 @@
 <?php 
 require_once "constants.php";
 require_once "sql.php";
+require_once "HashedPassword.php";
 
 /**
  * This file contains the model for the user connection
@@ -38,13 +39,14 @@ function does_nick_exist(string $nick) : bool {
   );
   
   if ($select->execute([$nick])) {
+    /// TODO: Comment and return statements can't both be right. Fix it. 
     // if fetch doesn't return NULL or false the nick exists
     return $select->fetch(PDO::FETCH_ASSOC) !== false;
   }
   return false;
 }
 
-function create_user(string $nick, string $hash, string $mail) : bool {
+function create_user(string $nick, HashedPassword $hash, string $mail) : bool {
   if (does_nick_exist($nick)) { return false; }
   $connection = get_db();
   $insert = $connection->prepare(
@@ -53,13 +55,13 @@ function create_user(string $nick, string $hash, string $mail) : bool {
   );
   
   $insert->bindValue(":nick", $nick);
-  $insert->bindValue(":hash", $hash);
+  $insert->bindValue(":hash", $hash->$hash);
   $insert->bindValue(":mail", $mail);
   
   return $insert->execute() !== false;
 }
 
-function user_login(string $nick, string $pass) : bool {
+function user_login(string $nick, string $raw_pass) : bool {
   $connection = get_db();
   $preped = $connection->prepare(
     "SELECT `pass` FROM ".DB_NAME.".`accounts` 
@@ -75,7 +77,7 @@ function user_login(string $nick, string $pass) : bool {
       $hash = $row;
     }
     
-    if (isset($hash) && password_verify($pass, $hash[0])) { 
+    if (isset($hash) && password_verify($raw_pass, $hash[0])) { 
       if (!array_key_exists("nick", $_SESSION)) {
         $_SESSION["nick"] = hash("sha256", $nick);
       }
@@ -88,4 +90,43 @@ function user_login(string $nick, string $pass) : bool {
 
 function is_valid_mail(string $email) : bool {
   return filter_var($email, FILTER_VALIDATE_EMAIL);
+}
+
+function is_admin() : bool {
+  if (!array_key_exists("nick", $_SESSION)
+  || !does_nick_exist($_SESSION["nick"])) {
+    return false;
+  }
+  
+  $connection = get_db();
+  $select = $connection->prepare(
+    "SELECT `isAdmin` FROM ".DB_NAME.".`accounts` 
+      WHERE `accounts`.`nick` = :nick;"
+  );
+  
+  $select->bindValue(":nick", $_SESSION["nick"]);  
+  
+  if ($select->execute()) {
+    $val = null;
+    
+    while ($row = $select->fetch()) {
+      $val = $row;
+    }
+    
+    return $val == 1;
+  } 
+  return false;
+}
+
+function get_user(string $nick) {
+  $connection = get_db();
+  $preped = $connection->prepare(
+    "SELECT `nick`, `mail`
+     FROM ".DB_NAME.".`accounts` 
+     WHERE `accounts`.`nick` = :nick;"
+  );
+  $preped->bindValue(":nick", $nick);
+  
+  $result = $preped->execute();
+  return $preped->fetch();
 }

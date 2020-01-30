@@ -38,11 +38,11 @@ ob_start();
   function submitForm() {
     const nick = $('#nick').val();
     const pass = $('#pass').val();
-
 <?php if ($is_signup) { ?>    
     const mail = $('#mail').val();
-
-    if (pass !== $('#pass-conf').val()) {
+    const conf = $('#pass-conf').val();
+    
+    if (pass !== conf) {
       failShake();
       return false;
     }
@@ -54,6 +54,7 @@ ob_start();
          nick: nick 
       ,  pass: pass
 <?php if ($is_signup) { ?>
+      ,  conf: conf
       ,  mail: mail
 <?php } ?>
       }
