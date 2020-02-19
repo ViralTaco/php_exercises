@@ -143,3 +143,17 @@ function is_admin() : bool {
   return false;
 }
 
+// TODO: edit_nick(); 
+function edit_nick(string $current, string $new): bool {
+  $connection = get_db();
+  $edit_query = $connection->prepare("UPDATE `".DB_NAME."`.`accounts`
+                                      SET `nick` = :new
+                                      WHERE `nick` = :current");
+  $edit_query->bindValue(":new", $new);                                        
+  $edit_query->bindValue(":current", $current);
+  
+  return $edit_query->execute() !== false;
+}
+// TODO: edit_mail(); 
+// TODO: edit_pass(); 
+// TODO: delete_user(); 

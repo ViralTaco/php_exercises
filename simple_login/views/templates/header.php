@@ -65,6 +65,7 @@ define("INCLUDE_URL", ROOT_URL."views/includes/");
           src="<?= INCLUDE_URL ?>js/popper.min.js"></script>
 <!-- language js -->
   <script type="text/javascript">
+   'use strict';
     /**
      * this function sets a cookie for the language 
      * and reloads the page 
@@ -86,10 +87,12 @@ define("INCLUDE_URL", ROOT_URL."views/includes/");
     });
   </script>
 
-<?php if (isset($login_php)) {
-  echo $login_php;
-} 
-?>
+<?php if (isset($include_login) && $include_login) { ?>
+<!-- login js -->
+  <script type="text/javascript">
+    <?php include LOGIN_JS; ?>
+  </script>
+<?php } ?>
 
 </head>
 <body>
@@ -177,3 +180,4 @@ define("INCLUDE_URL", ROOT_URL."views/includes/");
       </div>
     </nav>
   </header>
+  

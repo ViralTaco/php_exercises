@@ -17,6 +17,7 @@ if (!defined("VT_CONSTANTS_PHP")) {
   define("FORMS", realpath(__DIR__."/../views/templates/forms.php"));
   define("CARDS", realpath(__DIR__."/../views/templates/cards.php"));
   define("SORRY", realpath(__DIR__."/../views/templates/sorry.php"));
+  define("LOGIN_JS", realpath(__DIR__."/../views/includes/js/login.js.php"));
   
   // website root:
   define("ROOT_URL", "http://".getenv("HTTP_HOST")."/");
